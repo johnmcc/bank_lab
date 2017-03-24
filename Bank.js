@@ -13,15 +13,26 @@ Bank.prototype = {
     });
   },
   findLargestAccount: function(){
-    var sortedAccounts = this.accounts.sort(function(a, b){
-      return a.balance < b.balance;
+    var sortedAccounts = this.accounts.sort(function(accountA, accountB){
+      // sort the accounts from high > low based on the balance instance variable
+      return accountA.balance < accountB.balance;
     });
+
     return sortedAccounts[0];
   },
-  getTotalBalance: function(type){
-    return this.accounts.reduce(function(accum, account){
+  getTotalBalance: function(accountType){
+    var filteredAccounts = this.accounts.filter(function(account){
+      // The account should be included in the calculation if it matches the given type,
+      // or if the given type is undefined. (e.g. all accounts)
+      return account.type === accountType || accountType === undefined
+    });
+
+    var total = filteredAccounts.reduce(function(accum, account){
+      // accum is the accumulator - the running total. The second argument initialises this to 0.
       return accum + account.balance;
     }, 0);
+
+    return total;
   },
   getAverageBalance: function(){
     return this.getTotalBalance() / this.accounts.length;
